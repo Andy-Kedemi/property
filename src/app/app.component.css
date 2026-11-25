@@ -1,0 +1,9 @@
+.brand-name {
+  display: flex;
+  justify-content: left;
+}
+
+.brand-logo {
+  width: 100px;
+  height: auto;
+}

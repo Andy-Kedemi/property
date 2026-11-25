@@ -1,0 +1,41 @@
+.results {
+  display: grid;
+  gap: 12px;
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 100px auto 0;
+  padding: 0 24px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+input[type="text"] {
+  border: solid 1px var(--primary-color);
+  padding: 10px;
+  border-radius: 8px;
+  margin-right: 4px;
+  display: inline-block;
+  width: 30%;
+}
+
+button {
+  padding: 10px;
+  border: solid 1px var(--primary-color);
+  background: rgb(31, 31, 44);
+  color: rgba(245, 241, 244, 0.849);
+  border-radius: 999px;
+}
+
+@media (min-width: 500px) and (max-width: 768px) {
+  .results {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  input[type="text"] {
+      width: 70%;
+  }
+}
+
+@media (max-width: 499px) {
+  .results {
+      grid-template-columns: 1fr;
+  }
+}
