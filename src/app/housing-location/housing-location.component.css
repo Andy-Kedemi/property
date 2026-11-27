@@ -37,12 +37,16 @@
   content: url("/assets/location-pin.svg") / "";
 }
 
-section.listing a {
+section.listing button {
   padding-left: 20px;
   text-decoration: none;
   color: var(--primary-color);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
 }
-section.listing a::after {
+section.listing button::after {
   content: "\203A";
   margin-left: 5px;
 }

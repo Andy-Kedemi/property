@@ -8,6 +8,45 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.skeleton-card {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding-bottom: 12px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--accent-color, #f3f4f6);
+}
+
+.skeleton-photo {
+  width: 100%;
+  height: 96px;
+  border-radius: 10px 10px 0 0;
+}
+
+.skeleton-line {
+  height: 10px;
+  margin: 10px;
+}
+
+.skeleton-title {
+  width: 65%;
+}
+
+.skeleton-location {
+  width: 45%;
+}
+
+.skeleton-action {
+  width: 30%;
+  margin-top: 16px;
+}
+
+.load-error {
+  margin: 24px;
+  color: #b91c1c;
+}
+
 input[type="text"] {
   border: solid 1px var(--primary-color);
   padding: 10px;

@@ -1,9 +1,8 @@
 {
-  "posts": [
-    {
+  "locations": [ {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "name": "json-server",
+      "city": "typicode"
     }
   ],
   "comments": [

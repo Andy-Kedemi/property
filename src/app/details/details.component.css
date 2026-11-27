@@ -6,8 +6,63 @@
   float: right;
 }
 
+.details-skeleton {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "title photo"
+    "location photo"
+    "section photo"
+    "line photo"
+    "short photo"
+    "form form";
+  gap: 12px 24px;
+}
+
+.details-skeleton .skeleton-photo {
+  grid-area: photo;
+  width: 100%;
+  height: 280px;
+  border-radius: 16px;
+}
+
+.details-skeleton .skeleton-title {
+  grid-area: title;
+  width: 70%;
+  height: 32px;
+}
+
+.details-skeleton .skeleton-location {
+  grid-area: location;
+  width: 45%;
+}
+
+.details-skeleton .skeleton-section {
+  width: 60%;
+  height: 18px;
+}
+
+.details-skeleton .skeleton-short {
+  width: 45%;
+}
+
+.details-skeleton .skeleton-input {
+  grid-area: form;
+  width: min(100%, 400px);
+  height: 42px;
+  border-radius: 4px;
+}
+
+.load-error {
+  color: #b91c1c;
+}
+
+.content-enter {
+  animation: content-enter 250ms ease-out both;
+}
+
 .listing-heading {
-  font-size: 48pt;
+  font-size: 100pt;
   font-weight: bold;
   margin-bottom: 15px;
 }
@@ -67,5 +122,91 @@ input {
   .listing-photo {
     width: 100%;
     height: 400px;
+  }
+}
+
+article.modal-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "description photo"
+    "features photo"
+    "apply apply";
+  gap: 16px 24px;
+  align-items: start;
+}
+
+.modal-layout .listing-photo {
+  grid-area: photo;
+  float: none;
+  width: 100%;
+  height: 280px;
+  border-radius: 12px;
+}
+
+.modal-layout .listing-description {
+  grid-area: description;
+}
+
+.modal-layout .listing-heading {
+  margin-top: 0;
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+.modal-layout .listing-location {
+  font-size: 16px;
+}
+
+.modal-layout .listing-features {
+  grid-area: features;
+  margin-bottom: 0;
+}
+
+.modal-layout .listing-features > .section-heading,
+.modal-layout .listing-apply .section-heading {
+  font-size: 20px;
+}
+
+.modal-layout .listing-features li {
+  font-size: 14px;
+}
+
+.modal-layout .listing-apply {
+  grid-area: apply;
+}
+
+.modal-layout input {
+  box-sizing: border-box;
+  width: min(100%, 400px);
+}
+
+@media (max-width: 700px) {
+  .details-skeleton {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "title"
+      "location"
+      "photo"
+      "section"
+      "line"
+      "short"
+      "form";
+  }
+
+  .details-skeleton .skeleton-photo {
+    height: 240px;
+  }
+
+  article.modal-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "description"
+      "photo"
+      "features"
+      "apply";
+  }
+
+  .modal-layout .listing-photo {
+    height: 240px;
   }
 }

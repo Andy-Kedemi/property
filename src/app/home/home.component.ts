@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HousingLocationComponent } from '../housing-location/housing-location.component';
 import { HousingLocation } from '../housinglocation';
 import { HousingService } from '../housing.service';
+import { waitForMinimumSkeletonDuration } from '../skeleton-loading';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -23,7 +24,19 @@ import { HousingService } from '../housing.service';
         Search
       </button>
     </section>
-    <section class="results">
+    <p *ngIf="isLoading" class="visually-hidden" role="status">
+      Loading housing locations...
+    </p>
+    <section *ngIf="isLoading" class="results" aria-hidden="true">
+      <article *ngFor="let slot of skeletonCardSlots" class="skeleton-card">
+        <div class="skeleton skeleton-photo"></div>
+        <div class="skeleton skeleton-line skeleton-title"></div>
+        <div class="skeleton skeleton-line skeleton-location"></div>
+        <div class="skeleton skeleton-line skeleton-action"></div>
+      </article>
+    </section>
+    <p *ngIf="loadError" class="load-error" role="alert">{{ loadError }}</p>
+    <section *ngIf="!isLoading && !loadError" class="results">
       <app-housing-location
         *ngFor="let housingLocation of filteredLocationList"
         [housingLocation]="housingLocation"
@@ -34,17 +47,33 @@ import { HousingService } from '../housing.service';
 })
 export class HomeComponent {
   private readonly housingService = inject(HousingService);
+  readonly skeletonCardSlots = Array.from({ length: 8 });
   housingLocationList: HousingLocation[] = [];
   filteredLocationList: HousingLocation[] = [];
   private filterText = '';
+  isLoading = true;
+  loadError: string | null = null;
 
   constructor() {
-    this.housingService
-      .getAllHousingLocations()
-      .then((housingLocationList: HousingLocation[]) => {
-        this.housingLocationList = housingLocationList;
-        this.filterLocations(this.filterText);
-      });
+    void this.loadHousingLocations();
+  }
+
+  private async loadHousingLocations(): Promise<void> {
+    const minimumDuration = waitForMinimumSkeletonDuration();
+    const [locationsResult] = await Promise.allSettled([
+      this.housingService.getAllHousingLocations(),
+      minimumDuration,
+    ]);
+
+    if (locationsResult.status === 'fulfilled') {
+      this.housingLocationList = locationsResult.value;
+      this.filterLocations(this.filterText);
+    } else {
+      this.loadError = 'Failed to load housing locations. Please try again later.';
+      console.error('Failed to load housing locations', locationsResult.reason);
+    }
+
+    this.isLoading = false;
   }
 
   filterLocations(text: string): void {
