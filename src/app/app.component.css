@@ -7,3 +7,19 @@
   width: 100px;
   height: auto;
 }
+
+.toast {
+  position: fixed;
+  z-index: 2000;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  max-width: calc(100vw - 32px);
+  padding: 14px 20px;
+  border-radius: 8px;
+  background: #166534;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+  text-align: center;
+}

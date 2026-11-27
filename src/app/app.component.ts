@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ToastService } from './toast.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule],
+  imports: [CommonModule, RouterModule],
   template: `
     <main>
       <a [routerLink]="['/']">
@@ -20,9 +22,18 @@ import { RouterModule } from '@angular/router';
         <router-outlet></router-outlet>
       </section>
     </main>
+    <div
+      class="toast"
+      role="status"
+      aria-live="polite"
+      [hidden]="!(toastService.message$ | async)"
+    >
+      {{ (toastService.message$ | async) ?? '' }}
+    </div>
   `,
   styleUrl: './app.component.css',
 })
 export class AppComponent {
+  readonly toastService = inject(ToastService);
   title = 'Homes';
 }

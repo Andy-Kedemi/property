@@ -4,12 +4,13 @@ import { HousingLocationComponent } from '../housing-location/housing-location.c
 import { HousingLocation } from '../housinglocation';
 import { HousingService } from '../housing.service';
 import { waitForMinimumSkeletonDuration } from '../skeleton-loading';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, HousingLocationComponent],
   template: `
-    <section>
+    <section class="search">
       <input
         type="text"
         placeholder="Filter by name or city"

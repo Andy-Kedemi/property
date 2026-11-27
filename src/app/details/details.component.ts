@@ -1,10 +1,17 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { HousingService } from '../housing.service';
 import { HousingLocation } from '../housinglocation';
 import { waitForMinimumSkeletonDuration } from '../skeleton-loading';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-details',
   standalone: true,
@@ -57,15 +64,15 @@ import { waitForMinimumSkeletonDuration } from '../skeleton-loading';
         </section>
         <section class="listing-apply">
           <h2 class="section-heading">Apply now to live here</h2>
-          <form [formGroup]="applyForm" (submit)="submitApplication()">
+          <form [formGroup]="applyForm" (ngSubmit)="submitApplication()">
             <label for="first-name">First Name</label>
-            <input id="first-name" type="text" formControlName="firstName" />
+            <input id="first-name" type="text" formControlName="firstName" required />
 
             <label for="last-name">Last Name</label>
-            <input id="last-name" type="text" formControlName="lastName" />
+            <input id="last-name" type="text" formControlName="lastName" required />
 
             <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" />
+            <input id="email" type="email" formControlName="email" required />
             <button type="submit" class="primary">Apply now</button>
           </form>
         </section>
@@ -77,6 +84,9 @@ import { waitForMinimumSkeletonDuration } from '../skeleton-loading';
 export class DetailsComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   housingService = inject(HousingService);
+  private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
+  private readonly parentDialogRef = inject(MatDialogRef, { optional: true });
   @Input() housingLocationId?: number;
   @Input() modalLayout = false;
   housingLocation: HousingLocation | undefined;
@@ -84,9 +94,18 @@ export class DetailsComponent implements OnInit {
   loadError: string | null = null;
 
   applyForm = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    email: new FormControl(''),
+    firstName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    lastName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
   });
   async ngOnInit(): Promise<void> {
     const housingLocationId =
@@ -108,11 +127,19 @@ export class DetailsComponent implements OnInit {
 
     this.isLoading = false;
   }
-  submitApplication() {
+  submitApplication(): void {
+    if (this.applyForm.invalid) {
+      this.applyForm.markAllAsTouched();
+      return;
+    }
+
     this.housingService.submitApplication(
-      this.applyForm.value.firstName ?? '',
-      this.applyForm.value.lastName ?? '',
-      this.applyForm.value.email ?? '',
+      this.applyForm.controls.firstName.value,
+      this.applyForm.controls.lastName.value,
+      this.applyForm.controls.email.value,
     );
+    this.toastService.showSuccess('Application submitted successfully.');
+    this.parentDialogRef?.close();
+    void this.router.navigateByUrl('/');
   }
 }
